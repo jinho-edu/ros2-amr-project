@@ -78,6 +78,6 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            ghcr.io/myorg/amr_nav:latest
-            ghcr.io/myorg/amr_nav:sha-${{ github.sha }}
+            ghcr.io/jinho-edu/ros2-amr-project:latest
+            ghcr.io/jinho-edu/ros2-amr-project:sha-${{ github.sha }}
             
