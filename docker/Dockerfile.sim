@@ -5,18 +5,18 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
 # ----------------------------------------
-# 1. 기본 도구 설치
+# 1. 기본 도구
 # ----------------------------------------
 RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     lsb-release \
-    python3-pip \
     python3-colcon-common-extensions \
+    python3-pytest \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------
-# 2. Gazebo (Harmonic) 공식 GZ 레포지토리 등록
+# 2. Gazebo Harmonic repo 등록
 # ----------------------------------------
 RUN curl -sSL https://packages.osrfoundation.org/gazebo.gpg \
     | gpg --dearmor -o /usr/share/keyrings/gazebo-archive-keyring.gpg
@@ -27,7 +27,7 @@ RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/gazebo-archive-keyring.g
     > /etc/apt/sources.list.d/gazebo-stable.list
 
 # ----------------------------------------
-# 3. Gazebo Harmonic + ROS2 연동 패키지 설치
+# 3. Gazebo Harmonic + ROS-GZ
 # ----------------------------------------
 RUN apt-get update && apt-get install -y \
     gz-harmonic \
@@ -35,19 +35,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------
-# 4. Python 테스트 도구
-# ----------------------------------------
-RUN pip3 install --no-cache-dir pytest
-
-# ----------------------------------------
-# 5. ROS2 Workspace
+# 4. Workspace
 # ----------------------------------------
 WORKDIR /ros2_ws
 COPY . .
 
-# ----------------------------------------
-# 6. Build
-# ----------------------------------------
 RUN /bin/bash -c "\
     source /opt/ros/jazzy/setup.bash && \
     colcon build \
