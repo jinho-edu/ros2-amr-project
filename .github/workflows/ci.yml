@@ -1,0 +1,35 @@
+name: ROS2 Jazzy CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build CI Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/Dockerfile.sim
+          tags: amr_nav:ci
+          load: true
+
+      - name: Run Unit Tests
+        run: |
+          docker run --rm amr_nav:ci \
+            bash -c "source /opt/ros/jazzy/setup.bash && pytest tests/unit"
+
+      - name: Run Integration Tests (Headless)
+        run: |
+          docker run --rm --env ROS_DOMAIN_ID=99 amr_nav:ci \
+            bash -c "source /opt/ros/jazzy/setup.bash && pytest tests/integration"
