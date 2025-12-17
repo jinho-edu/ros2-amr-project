@@ -1,0 +1,11 @@
+FROM ros:jazzy-ros-base
+
+RUN apt-get update && apt-get install -y \
+    ros-jazzy-nav2-bringup \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /ros2_ws
+COPY install ./install
+
+USER ros
+CMD ["ros2", "launch", "amr_nav", "bringup.launch.py"]

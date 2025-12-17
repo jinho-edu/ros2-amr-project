@@ -1,0 +1,24 @@
+# FROM ros:jazzy
+FROM osrf/ros:jazzy-desktop
+
+# 기본 패키지 설치
+RUN apt update && apt install -y \
+    python3-colcon-common-extensions \
+    ros-jazzy-rmw-cyclonedds-cpp \
+    # ros-jazzy-desktop \
+    ros-jazzy-ros-gz \
+    ros-jazzy-ros-gz-sim \
+    ros-jazzy-ros-gz-bridge \
+    ros-jazzy-turtlebot3* \
+    ros-jazzy-nav2-bringup \
+    && rm -rf /var/lib/apt/lists/*
+
+# Workspace 생성
+RUN mkdir -p /ws/src
+
+# ROS 환경 자동 로드
+RUN echo "source /opt/ros/jazzy/setup.bash" >> /root/.bashrc
+
+WORKDIR /ws
+
+CMD ["bash"]

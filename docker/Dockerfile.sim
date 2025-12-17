@@ -1,0 +1,14 @@
+FROM ros:jazzy
+
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    ros-jazzy-gazebo-ros-pkgs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /ros2_ws
+COPY . .
+
+RUN pip3 install pytest
+RUN colcon build
+
+CMD ["bash"]
