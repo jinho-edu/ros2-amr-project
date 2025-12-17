@@ -36,4 +36,8 @@ jobs:
       - name: Run Integration Tests (Headless)
         run: |
           docker run --rm --env ROS_DOMAIN_ID=99 amr_nav:ci \
-            bash -c "source /opt/ros/jazzy/setup.bash && pytest tests/integration"
+            bash -c " \ 
+              source /opt/ros/jazzy/setup.bash && \
+              source /ros2_ws/install/setup.bash && \
+              pytest tests/integration
+            "
