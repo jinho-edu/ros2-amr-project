@@ -47,6 +47,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -74,6 +78,6 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            myorg/amr_nav:latest
-            myorg/amr_nav:sha-${{ github.sha }}
+            ghcr.io/myorg/amr_nav:latest
+            ghcr.io/myorg/amr_nav:sha-${{ github.sha }}
             
