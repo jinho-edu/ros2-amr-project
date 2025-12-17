@@ -25,9 +25,13 @@ jobs:
           load: true
 
       - name: Run Unit Tests
-        run: |
+        run: |          
           docker run --rm amr_nav:ci \
-            bash -c "source /opt/ros/jazzy/setup.bash && pytest tests/unit"
+            bash -c " \
+              source /opt/ros/jazzy/setup.bash && \
+              source /ros2_ws/install/setup.bash && \
+              pytest tests/unit \
+            "
 
       - name: Run Integration Tests (Headless)
         run: |
