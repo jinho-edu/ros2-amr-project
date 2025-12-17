@@ -1,11 +1,25 @@
-FROM ros:jazzy-ros-base
+# ===== Build stage =====
+FROM ros:jazzy AS builder
 
 RUN apt-get update && apt-get install -y \
-    ros-jazzy-nav2-bringup \
+    python3-colcon-common-extensions \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ros2_ws
-COPY install ./install
+COPY src ./src
 
-USER ros
-CMD ["ros2", "launch", "amr_nav", "bringup.launch.py"]
+RUN . /opt/ros/jazzy/setup.sh && colcon build
+
+# ===== Runtime stage =====
+FROM ros:jazzy-ros-base
+
+WORKDIR /ros2_ws
+
+COPY --from=builder /ros2_ws/install ./install
+
+ENTRYPOINT ["/bin/bash", "-c", \
+  "source /opt/ros/jazzy/setup.bash && \
+   source install/setup.bash && \
+   exec \"$@\""]
+
+CMD ["ros2", "launch", "amr_nav", "runtime.launch.py"]
